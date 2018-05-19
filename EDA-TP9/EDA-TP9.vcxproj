@@ -124,11 +124,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Display.cpp" />
+    <ClCompile Include="hitachilcd.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BasicLcd.h" />
     <ClInclude Include="Display.h" />
+    <ClInclude Include="hitachilcd.h" />
     <ClInclude Include="librerias\ftd2xx.h" />
     <ClInclude Include="masksAnd Stuff.h" />
     <ClInclude Include="Timer.h" />

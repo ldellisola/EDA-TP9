@@ -38,10 +38,10 @@ FT_HANDLE initDisplay(const char * displayName)
 		lcd_SendData(lcdInstructions::clearScreen, true, display);
 
 		lcd_SendData(lcdInstructions::entryModeSet, true, display);
-
+		return display;
 	}
+	return NULL;
 
-	return display;
 }
 
 void lcdWriteNyble(FT_HANDLE& h, byte d)
