@@ -1,7 +1,9 @@
 #pragma once
 #include "librerias\ftd2xx.h"
 #include "BasicLcd.h"
-
+#include <string>
+#include <iostream>
+using namespace std;
 class hitachilcd :
 	public basicLCD
 {
@@ -14,7 +16,7 @@ public:
 	virtual bool lcdClearToEOL();
 	virtual basicLCD& operator<<(const char c);
 	virtual basicLCD& operator<<(const char * c);
-	virtual basicLCD& operator<<(std::string str);
+	virtual basicLCD& operator<<(string str);
 	virtual bool lcdMoveCursorUp();
 	virtual bool lcdMoveCursorDown();
 	virtual bool lcdMoveCursorRight();
