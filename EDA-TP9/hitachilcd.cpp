@@ -220,6 +220,7 @@ hitachilcd::~hitachilcd()
 		delete device_handler;
 	}
 }
+
 void hitachilcd::lcdUpdateCursor()
 {
 	lcdWriteNyble(this->device_handler, LCD_SET_DDRAM_ADRESS | Hcadd());
