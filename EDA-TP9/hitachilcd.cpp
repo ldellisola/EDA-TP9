@@ -75,7 +75,7 @@ bool hitachilcd::lcdClearToEOL() {
 		limit = END_OF_FIRST_LINE;
 	else if (isOnSecondLine(this->cadd))
 		limit = END_OF_SECOND_LINE;
-	else this->error = true;//Este caso es que el cursor se fue d ela pantalla
+	//else this->error = true;//Este caso es que el cursor se fue d ela pantalla
 	if (!error)
 	{
 		while (this->cadd++ <= limit)
@@ -102,7 +102,7 @@ basicLCD& hitachilcd::operator<<(const char * c) {
 	{
 		lcd_SendData(c[iterator++], false, this->device_handler);
 		//lcdWriteNyble(this->device_handler, c[iterator++]);
-		if (++cadd = END_OF_SECOND_LINE + 1)
+		if (++cadd == END_OF_SECOND_LINE + 1)
 			this->cadd = BEGIN_OF_FIRST_LINE;
 		//lcdMoveCursorRight();
 		lcdUpdateCursor();
@@ -124,11 +124,11 @@ basicLCD& hitachilcd::operator<<(string str) {
 	return *this;
 }
 bool hitachilcd::lcdMoveCursorUp() {
-	if (firstLineRange) { return false; }//Ya estoy en la primer linea
+	if (firstLineRange) { return true; }//Ya estoy en la primer linea
 	else if (secondLineRange) {
 		cursorPosition newPos;
-		newPos.column = 1;
-		newPos.row = this->cadd - CANT_COL;
+		newPos.column = this->cadd - CANT_COL;
+		newPos.row =1 ;
 		this->lcdSetCursorPosition(newPos);
 		return true;
 	}
@@ -143,7 +143,7 @@ bool hitachilcd::lcdMoveCursorDown() {
 		return true;
 	}
 	else
-		return false; //no se puede mover hacia abajo
+		return true; //no se puede mover hacia abajo
 }
 bool hitachilcd::lcdMoveCursorRight() {
 	if (totalRange && (this->cadd != END_OF_SECOND_LINE))//Siempre que no haya llegado al final
@@ -167,7 +167,7 @@ bool hitachilcd::lcdMoveCursorRight() {
 		lcdSetCursorPosition(newPos);
 		return true;
 	}
-	else return false;//Me pasé de el display
+	else return true;//Me pasé de el display
 }
 bool hitachilcd::lcdMoveCursorLeft() {
 	if (totalRange && (this->cadd != 1))
@@ -191,7 +191,7 @@ bool hitachilcd::lcdMoveCursorLeft() {
 		lcdSetCursorPosition(newPos);
 		return true;
 	}
-	else return false;//Estoy en el principio
+	else return true;//Estoy en el principio
 }
 bool hitachilcd::lcdSetCursorPosition(const cursorPosition pos) {
 	switch (pos.row){

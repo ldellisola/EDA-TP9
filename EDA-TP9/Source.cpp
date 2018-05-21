@@ -9,9 +9,9 @@ using namespace std;
 
 int main() {
 
-	//hitachilcd  prog( (char *)"EDA LCD 2 B");
-	allegrolcd prog(1.0, 2.0);
-
+	hitachilcd  prog( (char *)"EDA LCD 2 B");
+	//allegrolcd prog(1.0, 2.0);
+	prog.lcdClear();
 	CursesClass curses;
 	bool leave = false;
 	basicLCD * lcd = &prog;
@@ -22,31 +22,31 @@ int main() {
 		switch (ch) {
 		case 27: leave = true; break; // Es escape. Cierra el programa
 		case ERR: break;			// No pasa nada
-		case KEY_UP:
-			if (!lcd->lcdMoveCursorUp()) {
-				error(curses);
-				leave = true;
-			}
+		case 'W':
+			if (!lcd->lcdMoveCursorUp())
+			{		error(curses);
+			leave = true;
+		}
 			break;			// Mueve el cursor para arriba
-		case KEY_DOWN:
+		case 'S':
 			if (!lcd->lcdMoveCursorDown()) {
 				error(curses);
 				leave = true;
 			}
 			break;		// Mueve el cursor para abajo
-		case KEY_LEFT:
+		case 'A':
 			if (!lcd->lcdMoveCursorLeft()) {
 				error(curses);
 				leave = true;
 			}
 			break;		// Mueve el cursor para la izquierda
-		case KEY_RIGHT:
+		case 'D':
 			if (!lcd->lcdMoveCursorRight()) {
 				error(curses);
 				leave = true;
 			}
 			break;		// Mueve el cursor a la derecha
-		case KEY_CATAB:
+		case '|':
 
 			if (!lcd->lcdClear()) {
 				error(curses);
@@ -60,13 +60,14 @@ int main() {
 			clear();
 			printInstructions(curses);
 			break;
-		case KEY_BACKSPACE:
+		case ' ':
 			if (!lcd->lcdMoveCursorLeft()) {
 				error(curses);
 				leave = true;
 			}
 			else {
 				*lcd << " ";
+				lcd->lcdMoveCursorLeft();
 			}
 
 			break;	// Borra el ultimo caracter

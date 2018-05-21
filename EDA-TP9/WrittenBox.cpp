@@ -27,7 +27,7 @@ void WrittenBox::draw()
 	ALLEGRO_BITMAP * c = al_get_backbuffer(al_get_current_display());
 	al_set_target_bitmap(this->bitmap);
 	al_clear_to_color(al_map_rgba(0, 0, 0, 0));
-	//al_draw_filled_rectangle(this->width / 2.0 + 100, this->height / 2.0 + 100, this->width / 2.0 - 100, this->height / 2.0 - 100, al_map_rgb(255, 255, 255));
+	al_draw_filled_rectangle(this->width / 2.0 + 50, this->height / 2.0 + 50, this->width / 2.0 - 50, this->height / 2.0 - 50, al_map_rgb(95, 171, 65));
 	al_draw_text(this->font, this->fontColor, this->width / 2.0, this->height / 2.0, ALLEGRO_ALIGN_CENTRE, (text.size() == 0) ?  (&this->singles) : this->text.c_str());
 	al_set_target_bitmap(c);
 	al_draw_bitmap(this->bitmap, this->x, this->y, 0);

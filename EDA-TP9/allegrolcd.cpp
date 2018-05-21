@@ -67,7 +67,8 @@ bool allegrolcd::lcdClear() {
 	al_clear_to_color(al_map_rgb(0, 0, 0));
 	al_draw_filled_rectangle(50, 50, 1650, 350, al_map_rgb(95, 171, 65));
 	al_flip_display();
-	return this->error;
+	this->cadd = 1;
+	return !(this->error);
 }
 bool allegrolcd::lcdClearToEOL() {
 	if (this->cadd <= endFirstLine)

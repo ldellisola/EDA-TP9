@@ -23,10 +23,8 @@ void printInstructions(CursesClass & curses)
 	move(0, 0);
 	printw("Hello and welcome to EDA-TP9. Do as I say and nothing will ever happen to your family, do otherwise and you'll see...\n");
 	printw("\n");
-	printw("Use the arrows to navigate around the display\n");
-	printw("Press 'Tab' to clear the screen");
+	printw("Use the WASD (case sensitive) to navigate around the display\n");
+	printw("Press '|' to clear the screen");
 	printw("Press any key to write");
 	printw("Press 'esc' to leave the program\n");
-
-
 }
