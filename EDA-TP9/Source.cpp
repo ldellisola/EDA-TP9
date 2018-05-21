@@ -9,7 +9,7 @@ int main() {
 	FT_HANDLE display;
 	if (initDisplay("EDA LCD 2 B", display)) {
 		cout << "init yes display" << endl;
-		lcd_SendData( 0x30, false,display);
+		lcd_SendData( 'a', false,display);
 	}
 	else
 		cout << "init not display" << endl;
