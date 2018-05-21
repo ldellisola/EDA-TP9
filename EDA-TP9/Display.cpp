@@ -1,5 +1,6 @@
 #include "Display.h"
-
+
+
 
 
 void lcd_SendData(byte data, bool rs_, FT_HANDLE& handle)
@@ -28,26 +29,40 @@ bool initDisplay(const char * displayName, FT_HANDLE& display)
 		if (FT_OK == FT_SetBitMode(display, allPins, asyncMode)) {
 
 			init = true;
-
-			byte bitMode8 = lcdInstructions::funcionSet | lcdInstructions::funcionChs::dataLenght;
-			lcd_SendData(bitMode8, true, display);
-			wait(4);
-			lcd_SendData(bitMode8, true, display);
+			 // Mando 3 veces el modo de 8 bits
+			lcdWriteNyble(display, 0x03, true);
+			 wait(4);
+			lcdWriteNyble(display, 0x03, true);
 			wait(1);
-			lcd_SendData(bitMode8, true, display);
+			lcdWriteNyble(display, 0x03, true);
+			 // Mando una vez el modo de 4 bits
+			lcdWriteNyble(display, 0x02, true);
 
-			byte bitMode4 = lcdInstructions::funcionSet;
-			lcd_SendData(bitMode4, true, display);
-
-			// FALTA PASO 7
-			byte step7 = lcdInstructions::funcionSet | lcdInstructions::funcionChs::displayLines | lcdInstructions::funcionChs::font;
-			lcd_SendData(step7, true, display);
-
-			lcd_SendData(lcdInstructions::displayOnOffControl, true, display);
-
+			lcdWriteNyble(display, 0x04, true);
+			lcdWriteNyble(display, 0x08, true);
+			lcd_SendData(0x0E, true, display);
 			lcd_SendData(lcdInstructions::clearScreen, true, display);
+			lcd_SendData(0x0C, true, display);
 
-			lcd_SendData(lcdInstructions::entryModeSet, true, display);
+			//byte bitMode8 = lcdInstructions::funcionSet | lcdInstructions::funcionChs::dataLenght;
+			//lcd_SendData(bitMode8, true, display);
+			//wait(4);
+			//lcd_SendData(bitMode8, true, display);
+			//wait(1);
+			//lcd_SendData(bitMode8, true, display);
+
+			//byte bitMode4 = lcdInstructions::funcionSet;
+			//lcd_SendData(bitMode4, true, display);
+
+			//// FALTA PASO 7
+			//byte step7 = lcdInstructions::funcionSet | lcdInstructions::funcionChs::displayLines | lcdInstructions::funcionChs::font;
+			//lcd_SendData(step7, true, display);
+
+			//lcd_SendData(lcdInstructions::displayOnOffControl, true, display);
+
+			//lcd_SendData(lcdInstructions::clearScreen, true, display);
+
+			//lcd_SendData(lcdInstructions::entryModeSet, true, display);
 		}
 	}
 	return init;
