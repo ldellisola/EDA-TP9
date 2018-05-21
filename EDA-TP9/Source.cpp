@@ -4,8 +4,9 @@
 
 int main() {
 
-	FT_HANDLE display = initDisplay("EDA LCD 2 B", );
-	lcdWriteNyble(display, 0x30);
+	FT_HANDLE display;
+	if (initDisplay("EDA LCD 2 B", display))
+		lcdWriteNyble(display, 0x30, false);
 
 	return 1;
 }

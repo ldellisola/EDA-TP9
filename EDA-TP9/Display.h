@@ -14,7 +14,7 @@ bool initDisplay(const char * displayName, FT_HANDLE& display);
 
 void lcd_SendData(byte data, bool rs, FT_HANDLE& handle);
 
-void lcdWriteNyble(FT_HANDLE & h, byte d);
+void lcdWriteNyble(FT_HANDLE & h, byte d, bool rs_);
 
 
 void wait(float ms);
