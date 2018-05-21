@@ -1,6 +1,6 @@
 #include "hitachilcd.h"
 #include "Display.h"
-#include "librerias\ftd2xx.h"
+#include "ftd2xx.h"
 #include "masksAnd Stuff.h"
 #include <string>
 #include <iostream>
@@ -27,12 +27,12 @@ using namespace std;
 #define isValidPos(pos) ((isValidRow(pos.row) && isValidCol(pos.column)))
 #define HITACHI_OFFSET_SECOND_LINE 0x30
 #define ERROR_HCADD 0xFF
-/*
+
 hitachilcd::hitachilcd(char * myDevice)
 {
 	Init = false;
 	error = true;
-	this->device_handler = (initDisplay(myDevice));//De esto tampoco estoy muy seguro
+	initDisplay(myDevice,this->device_handler);//De esto tampoco estoy muy seguro
 	if (this->device_handler != nullptr)
 	{
 		this->Init = true;
@@ -50,7 +50,7 @@ bool hitachilcd::lcdGetError() {
 	DWORD * lpdwAmountInRxQueue = NULL;
 	DWORD * lpdwAmountInTxQueue = nullptr;
 	DWORD * lpdwEventStatus = nullptr;
-	FT_STATUS state = FT_GetStatus(*device_handler, lpdwAmountInRxQueue, lpdwAmountInTxQueue, lpdwEventStatus);
+	FT_STATUS state = FT_GetStatus(device_handler, lpdwAmountInRxQueue, lpdwAmountInTxQueue, lpdwEventStatus);
 	if (state == FT_OK) { final = true; }
 	else error = true;
 	return final;
@@ -58,7 +58,8 @@ bool hitachilcd::lcdGetError() {
 bool hitachilcd::lcdClear() {
 	bool result = false;
 	FT_STATUS state = FT_OK;
-	lcdWriteNyble(this->device_handler, lcdInstructions::clearScreen); //No se como usarlo
+	lcd_SendData(lcdInstructions::clearScreen, true, this->device_handler); //da fuck is rs
+	//lcdWriteNyble(this->device_handler, lcdInstructions::clearScreen); //No se como usarlo
 	if (state == FT_OK)
 	{
 		cadd = 1;
@@ -78,14 +79,16 @@ bool hitachilcd::lcdClearToEOL() {
 	if (!error)
 	{
 		while (this->cadd++ <= limit)
-			lcdWriteNyble(this->device_handler, ' ');//Escribo espacios
+			lcd_SendData(' ', false, this->device_handler); //No clue what rs is
+			//lcdWriteNyble(this->device_handler, ' ');//Escribo espacios
 		cadd = cadd_2;
 		lcdUpdateCursor();
 	}
 	return error;//True si hubo error
 }
 basicLCD& hitachilcd::operator<<(const char  c) {
-	lcdWriteNyble(this->device_handler, c);
+	lcd_SendData(c, false, this->device_handler);//still no clue
+	//lcdWriteNyble(this->device_handler, c);
 	if (++cadd == (END_OF_SECOND_LINE + 1))
 	{
 		cadd = BEGIN_OF_FIRST_LINE;
@@ -97,10 +100,13 @@ basicLCD& hitachilcd::operator<<(const char * c) {
 	unsigned long int iterator = 0;
 	while (c[iterator])
 	{
-		lcdWriteNyble(this->device_handler, c[iterator++]);
+		lcd_SendData(c[iterator++], false, this->device_handler);
+		//lcdWriteNyble(this->device_handler, c[iterator++]);
 		if (++cadd = END_OF_SECOND_LINE + 1)
 			this->cadd = BEGIN_OF_FIRST_LINE;
+		//lcdMoveCursorRight();
 		lcdUpdateCursor();
+
 	}
 	return *this;
 }
@@ -108,9 +114,11 @@ basicLCD& hitachilcd::operator<<(string str) {
 
 	for (unsigned int iterator = 0; iterator < (str.size()); iterator++)
 	{
-		lcdWriteNyble(this->device_handler, str[iterator]);
-		if (++cadd = END_OF_SECOND_LINE + 1)
+		lcd_SendData(str[iterator], false, this->device_handler);//sigo sin tener idea que es el rs
+		//lcdWriteNyble(this->device_handler, str[iterator]);
+		if (++cadd == END_OF_SECOND_LINE + 1)
 			this->cadd = BEGIN_OF_FIRST_LINE;
+		//lcdMoveCursorRight();
 		lcdUpdateCursor();
 	}
 	return *this;
@@ -216,19 +224,20 @@ hitachilcd::~hitachilcd()
 {
 	if (Init)
 	{
-		FT_Close(*device_handler);
+		FT_Close(device_handler);
 		delete device_handler;
 	}
 }
 
 void hitachilcd::lcdUpdateCursor()
 {
-	lcdWriteNyble(this->device_handler, LCD_SET_DDRAM_ADRESS | Hcadd());
+	//lcdWriteNyble(this->device_handler, LCD_SET_DDRAM_ADRESS | Hcadd());
+	lcd_SendData(LCD_SET_DDRAM_ADRESS | Hcadd(), true, this->device_handler);//No tengo idea que es rs
 }
 
 unsigned char hitachilcd::Hcadd()
 {
-	char hcad_ = 0;
+	unsigned char hcad_ = 0;
 	if (firstLineRange)
 		hcad_ = ((char)cadd) - 1;
 	else if (secondLineRange)
@@ -240,5 +249,3 @@ unsigned char hitachilcd::Hcadd()
 
 	return hcad_;	
 }
-
-*/

@@ -1,5 +1,5 @@
 #pragma once
-#include "librerias\ftd2xx.h"
+#include "ftd2xx.h"
 #include "BasicLcd.h"
 #include <string>
 #include <iostream>
@@ -26,7 +26,7 @@ public:
 
 private:
 	bool Init;
-	FT_HANDLE * device_handler;
+	FT_HANDLE  device_handler;
 	virtual void lcdUpdateCursor();
 	unsigned char Hcadd();
 };

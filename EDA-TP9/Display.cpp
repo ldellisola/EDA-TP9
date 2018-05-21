@@ -21,7 +21,6 @@ void lcd_SendData(byte data, bool rs_, FT_HANDLE& handle)
 
 bool initDisplay(const char * displayName, FT_HANDLE& display)
 {
-	
 	bool init = false;
 	if (FT_OK == FT_OpenEx((PVOID)displayName, FT_OPEN_BY_DESCRIPTION, &display)) {
 		byte allPins = 0xff, asyncMode = 1;
@@ -37,32 +36,15 @@ bool initDisplay(const char * displayName, FT_HANDLE& display)
 			lcdWriteNyble(display, 0x03, true);
 			 // Mando una vez el modo de 4 bits
 			lcdWriteNyble(display, 0x02, true);
-
-			lcdWriteNyble(display, 0x04, true);
-			lcdWriteNyble(display, 0x08, true);
+		
+		//	lcdWriteNyble(display, 0x04, true);
+			//lcdWriteNyble(display, 0x08, true);
+			lcd_SendData(0x14, true, display);
 			lcd_SendData(0x0E, true, display);
 			lcd_SendData(lcdInstructions::clearScreen, true, display);
 			lcd_SendData(0x0C, true, display);
 
-			//byte bitMode8 = lcdInstructions::funcionSet | lcdInstructions::funcionChs::dataLenght;
-			//lcd_SendData(bitMode8, true, display);
-			//wait(4);
-			//lcd_SendData(bitMode8, true, display);
-			//wait(1);
-			//lcd_SendData(bitMode8, true, display);
 
-			//byte bitMode4 = lcdInstructions::funcionSet;
-			//lcd_SendData(bitMode4, true, display);
-
-			//// FALTA PASO 7
-			//byte step7 = lcdInstructions::funcionSet | lcdInstructions::funcionChs::displayLines | lcdInstructions::funcionChs::font;
-			//lcd_SendData(step7, true, display);
-
-			//lcd_SendData(lcdInstructions::displayOnOffControl, true, display);
-
-			//lcd_SendData(lcdInstructions::clearScreen, true, display);
-
-			//lcd_SendData(lcdInstructions::entryModeSet, true, display);
 		}
 	}
 	return init;
@@ -77,20 +59,21 @@ void lcdWriteNyble(FT_HANDLE& h, byte d, bool rs_)
 	temp = ((d << 4) & (byte)(0xF0));
 	if (rs_)
 	{
-		temp = ((temp | (0x00)) & (LCD_E_OFF));
+		//temp = ((temp | (0x00)) & (LCD_E_OFF));
+		temp = (temp & 0b11111110);
 		FT_Write((h), (LPVOID)&temp, sizeof(temp), &sent);
 		wait(1); //delay de 1 ms
 		temp = (temp | (LCD_E_ON));
 		FT_Write(h, (LPVOID)&temp, sizeof(temp), &sent);
 		wait(3);//delay de 3ms.
-		temp = temp & (LCD_E_OFF);
+		temp = temp & (0b11111110);
 		FT_Write(h, (LPVOID)&temp, sizeof(temp), &sent);
 
 	}
 	else
 	{
 
-		temp = (temp | (0x02)) & (LCD_E_OFF);
+		temp = (temp | (0x02)) & (0b11111110);
 		FT_Write(h, (LPVOID)&temp, sizeof(temp), &sent);
 		wait(1);//delay de 1 ms
 		sent = 0;
@@ -98,7 +81,7 @@ void lcdWriteNyble(FT_HANDLE& h, byte d, bool rs_)
 		FT_Write(h, (LPVOID)&temp, sizeof(temp), &sent);
 		wait(3);//delay de 3ms.
 		sent = 0;
-		temp = temp & (LCD_E_OFF);
+		temp = temp & (0b11111110);
 		FT_Write(h, (LPVOID)&temp, sizeof(temp), &sent);
 		wait(1);
 	}
