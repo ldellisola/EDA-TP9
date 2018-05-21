@@ -10,7 +10,7 @@
 #define ENABLE 0x01
 typedef unsigned long DWORD;
 
-FT_HANDLE initDisplay(const char * displayName);
+bool initDisplay(const char * displayName, FT_HANDLE& display);
 
 void lcd_SendData(byte data, bool rs, FT_HANDLE& handle);
 

@@ -27,7 +27,7 @@ using namespace std;
 #define isValidPos(pos) ((isValidRow(pos.row) && isValidCol(pos.column)))
 #define HITACHI_OFFSET_SECOND_LINE 0x30
 #define ERROR_HCADD 0xFF
-
+/*
 hitachilcd::hitachilcd(char * myDevice)
 {
 	Init = false;
@@ -240,3 +240,5 @@ unsigned char hitachilcd::Hcadd()
 
 	return hcad_;	
 }
+
+*/
