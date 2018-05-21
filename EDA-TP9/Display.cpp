@@ -71,23 +71,57 @@ bool initDisplay(const char * displayName, FT_HANDLE& display)
 
 void lcdWriteNyble(FT_HANDLE& h, byte d, bool rs_)
 {
-	byte rs = (rs_ ? 0x00 : 0x02);
-	byte temp =( d << 4 ) & 0xf0;
 
-	DWORD BytesSent = 0;
+	DWORD sent = 0;
+	unsigned char temp;
+	temp = ((d << 4) & (byte)(0xF0));
+	if (rs_)
+	{
+		temp = ((temp | (0x00)) & (LCD_E_OFF));
+		FT_Write((h), (LPVOID)&temp, sizeof(temp), &sent);
+		wait(1); //delay de 1 ms
+		temp = (temp | (LCD_E_ON));
+		FT_Write(h, (LPVOID)&temp, sizeof(temp), &sent);
+		wait(3);//delay de 3ms.
+		temp = temp & (LCD_E_OFF);
+		FT_Write(h, (LPVOID)&temp, sizeof(temp), &sent);
 
-	//Bajar enable 
-	temp = (temp | rs) & ~ENABLE;
-	FT_Write(h,(LPVOID) temp, sizeof(temp), &BytesSent);	// D7 D6 D5 D4 XX RS E
-															//	  |_____d_____|			
-	wait(0.5);
-	//Subir enable
-	temp = temp | ENABLE;
-	FT_Write(h, (LPVOID)temp, sizeof(temp), &BytesSent);
-	wait(3);
-	//Bajar enable
-	temp = temp & ~ENABLE;
-	FT_Write(h, (LPVOID)temp, sizeof(temp), &BytesSent);
+	}
+	else
+	{
+
+		temp = (temp | (0x02)) & (LCD_E_OFF);
+		FT_Write(h, (LPVOID)&temp, sizeof(temp), &sent);
+		wait(1);//delay de 1 ms
+		sent = 0;
+		temp = temp | (LCD_E_ON);
+		FT_Write(h, (LPVOID)&temp, sizeof(temp), &sent);
+		wait(3);//delay de 3ms.
+		sent = 0;
+		temp = temp & (LCD_E_OFF);
+		FT_Write(h, (LPVOID)&temp, sizeof(temp), &sent);
+		wait(1);
+	}
+
+
+
+	//byte rs = (rs_ ? 0x00 : 0x02);
+	//byte temp =( d << 4 ) & 0xf0;
+
+	//DWORD BytesSent = 0;
+
+	////Bajar enable 
+	//temp = (temp | rs) & ~ENABLE;
+	//FT_Write(h,(LPVOID) temp, sizeof(temp), &BytesSent);	// D7 D6 D5 D4 XX RS E
+	//														//	  |_____d_____|			
+	//wait(0.5);
+	////Subir enable
+	//temp = temp | ENABLE;
+	//FT_Write(h, (LPVOID)temp, sizeof(temp), &BytesSent);
+	//wait(3);
+	////Bajar enable
+	//temp = temp & ~ENABLE;
+	//FT_Write(h, (LPVOID)temp, sizeof(temp), &BytesSent);
 	
 }
 
