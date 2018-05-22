@@ -1,6 +1,7 @@
 #include "hitachilcd.h"
 #include "Display.h"
-#include "librerias\ftd2xx.h"
+#define FTD2XX_EXPORTS
+#include "librerias/ftd2xx.h"
 #include <string>
 #include <iostream>
 using namespace std;

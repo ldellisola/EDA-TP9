@@ -1,7 +1,7 @@
 #pragma once
 
 #define FTD2XX_EXPORTS
-#include "ftd2xx.h"
+#include "librerias/ftd2xx.h"
 #include "Timer.h"
 
 //Flag to recieve or not bits info

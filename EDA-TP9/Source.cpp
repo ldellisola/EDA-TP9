@@ -24,7 +24,6 @@ using namespace std;
 #define DOWNCURSOR KEY_DOWN
 #define LEFTCURSOR KEY_LEFT
 #define	RIGHTCURSOR KEY_RIGHT
-#define SPACE 32 //spacebar
 #define CLEAN_KEY 8 //Backspace
 #define ESC 27	//Tecla esc
 #define STRINGMODE '|'
@@ -73,7 +72,6 @@ int main() {
 					leave = true;
 				}
 				break;		// Mueve el cursor para la izquierda
-			case SPACE:
 			case RIGHTCURSOR:
 				if (!lcd->lcdMoveCursorRight()) {
 					error(curses);
@@ -98,6 +96,7 @@ int main() {
 			case STRINGMODE:			// Entra en modo string. Aca el usuario puede escribir un string y se imprime en el lcd
 				lcd->lcdClear();
 				stringMode(curses, *lcd);
+				noecho();
 				clear();
 				printInstructions(curses);
 				break;
@@ -112,7 +111,7 @@ int main() {
 				}
 				break;	// Borra el ultimo caracter
 			default:
-				if (isalnum(ch)) {		// Lo escribe en pantalla
+				if (isascii(ch)) {		// Lo escribe en pantalla
 					cursorPosition curr = lcd->lcdGetCursorPosition();
 					if ((curr.column == CANT_COL+1 ) && (curr.row == CANT_ROW))
 					{
