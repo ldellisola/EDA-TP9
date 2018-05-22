@@ -1,31 +1,11 @@
 #include "hitachilcd.h"
 #include "Display.h"
-#include "ftd2xx.h"
+#include "librerias\ftd2xx.h"
 #include <string>
 #include <iostream>
 using namespace std;
 
-#define LCD_SET_DDRAM_ADRESS ((unsigned char)0x80)
-#define BEGIN_OF_FIRST_LINE 1
-#define END_OF_FIRST_LINE 16
-#define BEGIN_OF_SECOND_LINE 17
-#define END_OF_SECOND_LINE 32
-#define firstLineRange	((cadd >= BEGIN_OF_FIRST_LINE) && (cadd <= END_OF_FIRST_LINE))
-#define secondLineRange	((cadd >= BEGIN_OF_SECOND_LINE) && (cadd <= END_OF_SECOND_LINE))
-#define totalRange			((cadd >= BEGIN_OF_FIRST_LINE) && (cadd <= END_OF_SECOND_LINE))
-#define isOnFirstLine(x) (((x >= BEGIN_OF_FIRST_LINE) && (x <= END_OF_FIRST_LINE)))
-#define isOnSecondLine(x) (((x >= BEGIN_OF_SECOND_LINE) && (x <= END_OF_SECOND_LINE)))
-#define MIN_ROW 0
-#define MAX_ROW 1
-#define MIN_COL 0
-#define MAX_COL 15
-#define CANT_ROW	2
-#define CANT_COL	16
-#define isValidRow(x) (((x >= MIN_ROW) && (x <= MAX_ROW)))
-#define isValidCol(x) (((x >= MIN_COL) && (x <= MAX_COL)))
-#define isValidPos(pos) ((isValidRow(pos.row) && isValidCol(pos.column)))
-#define HITACHI_OFFSET_SECOND_LINE 0x30
-#define ERROR_HCADD 0xFF
+
 
 hitachilcd::hitachilcd(char * myDevice)
 {
@@ -85,8 +65,9 @@ bool hitachilcd::lcdClearToEOL() {
 }
 
 basicLCD& hitachilcd::operator<<(const char  c) {
-	lcd_SendData(c, RS_DATA, this->device_handler);//still no clue
-
+	if (cadd == 1)
+		lcdClear();
+	lcd_SendData(c, RS_DATA, this->device_handler);
 	if (++cadd == (END_OF_SECOND_LINE + 1))
 	{
 		cadd = BEGIN_OF_FIRST_LINE;
@@ -97,24 +78,29 @@ basicLCD& hitachilcd::operator<<(const char  c) {
 
 basicLCD& hitachilcd::operator<<(const char * c) {
 	unsigned long int iterator = 0;
+	if (cadd == 1)
+		lcdClear();
 	while (c[iterator])
 	{
 		lcd_SendData(c[iterator++], RS_DATA, this->device_handler);
 		if (++cadd == END_OF_SECOND_LINE + 1)
+		{ 
 			this->cadd = BEGIN_OF_FIRST_LINE;
-
+		}
 		lcdUpdateCursor();
 	}
 	return *this;
 }
 
 basicLCD& hitachilcd::operator<<(string str) {
-
+	if (cadd == 1)
+		lcdClear();
 	for (unsigned int iterator = 0; iterator < (str.size()); iterator++)
 	{
-		lcd_SendData(str[iterator], RS_DATA, this->device_handler);//sigo sin tener idea que es el rs
-		if (++cadd == END_OF_SECOND_LINE + 1)
+		lcd_SendData(str[iterator], RS_DATA, this->device_handler);
+		if (++cadd == END_OF_SECOND_LINE + 1){
 			this->cadd = BEGIN_OF_FIRST_LINE;
+		}
 		lcdUpdateCursor();
 	}
 	return *this;
@@ -225,10 +211,7 @@ cursorPosition hitachilcd::lcdGetCursorPosition() {
 hitachilcd::~hitachilcd()
 {
 	if (Init)
-	{
 		FT_Close(device_handler);
-		delete device_handler;
-	}
 }
 
 void hitachilcd::lcdUpdateCursor()

@@ -13,6 +13,7 @@ CursesClass::CursesClass()
 
 	nodelay(display, nodelaySet);
 	noecho();
+	keypad(display,true);
 }
 
 

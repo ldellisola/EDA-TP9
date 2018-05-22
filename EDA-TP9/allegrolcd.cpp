@@ -75,19 +75,19 @@ bool allegrolcd::lcdClearToEOL() {
 	return this->error;
 }
 basicLCD& allegrolcd::operator<<(const char c) {
-	WrittenBox text((this->cadd <= endFirstLine ? (50 + (cadd - 1) * 100.0) : (50 + ((cadd - 1) - endFirstLine) * 100.0)), (this->cadd <= endFirstLine) ? (50) : (50 + 100.0), 100.0, 100.0, 50, "", (const char *)FONTPATH, "hotpink",c);
+	WrittenBox text((this->cadd <= endFirstLine ? (50 + (cadd - 1) * 100.0) : (50 + ((cadd - 1) - endFirstLine) * 100.0)), (this->cadd <= endFirstLine) ? (50) : (50 + 100.0), 100.0, 100.0, 50, "", (const char *)FONTPATH, "black", c);
 	text.draw();
 	al_flip_display();
 	this->cadd++;
 	return *this;
 }
 basicLCD& allegrolcd::operator<<(const char * c) {
-	int i=0;
+	int i = 0;
 	while (c[i])
 	{
 		if (cadd != endSecondLine + 1)
 		{
-			WrittenBox text((this->cadd <= endFirstLine ? (50 + (cadd - 1) * 100.0) : (50 + ((cadd - 1) - endFirstLine) * 100.0)), (this->cadd <= endFirstLine) ? (50) : (50 + 100.0), 100.0, 100.0, 50, "", (const char *)FONTPATH, "hotpink",c[i]);
+			WrittenBox text((this->cadd <= endFirstLine ? (50 + (cadd - 1) * 100.0) : (50 + ((cadd - 1) - endFirstLine) * 100.0)), (this->cadd <= endFirstLine) ? (50) : (50 + 100.0), 100.0, 100.0, 50, "", (const char *)FONTPATH, "black", c[i]);
 			text.draw();
 			this->cadd++;
 		}
@@ -105,7 +105,7 @@ basicLCD& allegrolcd::operator<<(std::string str) {
 	{
 		if (cadd != endSecondLine + 1)
 		{
-			WrittenBox text((this->cadd <= endFirstLine ? (50 + (cadd -1) * 100.0) : (50 + ((cadd - 1) - endFirstLine) * 100.0)), (this->cadd <= endFirstLine) ? (50) : (50 + 100.0), 100.0, 100.0, 50, "", (const char *)FONTPATH, "white",str[i]);
+			WrittenBox text((this->cadd <= endFirstLine ? (50 + (cadd - 1) * 100.0) : (50 + ((cadd - 1) - endFirstLine) * 100.0)), (this->cadd <= endFirstLine) ? (50) : (50 + 100.0), 100.0, 100.0, 50, "", (const char *)FONTPATH, "black", str[i]);
 			text.draw();
 			this->cadd++;
 		}
@@ -119,7 +119,7 @@ basicLCD& allegrolcd::operator<<(std::string str) {
 	return *this;
 }
 bool allegrolcd::lcdMoveCursorUp() {
-	if (cadd > endFirstLine){
+	if (cadd > endFirstLine) {
 		this->cadd -= endFirstLine;
 	}//muevo para arriba
 	return true;
@@ -133,7 +133,7 @@ bool allegrolcd::lcdMoveCursorRight() {
 	cursorPosition newpos;
 	if (cadd < endFirstLine && cadd>0)
 	{
-		newpos.column = cadd +1;
+		newpos.column = cadd + 1;
 		newpos.row = 1;
 	}
 	else if (cadd == endFirstLine)
@@ -144,27 +144,36 @@ bool allegrolcd::lcdMoveCursorRight() {
 	else if (cadd > endFirstLine && cadd < endSecondLine)
 	{
 		newpos.row = 2;
-		newpos.column = cadd - endFirstLine +1;
+		newpos.column = cadd - endFirstLine + 1;
+	}
+	else
+	{
+		newpos.row = 2;
+		newpos.column = endFirstLine;
 	}
 	this->lcdSetCursorPosition(newpos);
-return true;
+	return true;
 }
 bool allegrolcd::lcdMoveCursorLeft() {
 	cursorPosition newpos;
-	if (cadd <= endFirstLine && cadd>1)
+	if (cadd <= endFirstLine && cadd > 1)
 	{
-		newpos.column = cadd -1;
+		newpos.column = cadd - 1;
 		newpos.row = 1;
 	}
-	else if (cadd == endFirstLine+1)
+	else if (cadd == endFirstLine + 1)
 	{
 		newpos.column = endFirstLine;
 		newpos.row = 1;
 	}
-	else if (cadd > endFirstLine+1 && cadd <= endSecondLine)
+	else if (cadd > endFirstLine + 1 && cadd <= endSecondLine)
 	{
 		newpos.row = 2;
-		newpos.column = cadd - endFirstLine -1;
+		newpos.column = cadd - endFirstLine - 1;
+	}
+	else {
+		newpos.column = 1;
+		newpos.row = 1;
 	}
 	this->lcdSetCursorPosition(newpos);
 	return true;
@@ -174,14 +183,14 @@ bool allegrolcd::lcdSetCursorPosition(const cursorPosition pos) {
 	case 1:cadd = pos.column; break;
 	case 2: cadd = pos.column + endFirstLine; break;
 	}
-	//lcdUpdateCursor();
+	lcdUpdateCursor();
 	return true;
 }
 
 cursorPosition allegrolcd::lcdGetCursorPosition() {
 	cursorPosition currpos;
-	currpos.column = cadd;
-	currpos.row = cadd;
+	currpos.column = ((cadd > endFirstLine) ? (cadd - endFirstLine) : (cadd));
+	currpos.row = (cadd % 16) + 1;
 	return currpos;
 }
 
