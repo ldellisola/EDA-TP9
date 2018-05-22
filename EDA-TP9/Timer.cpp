@@ -6,9 +6,7 @@ Timer::Timer()
 {
 	this->getStartValue = false;
 	this->getStopValue = false;
-
 	this->start();
-
 }
 
 

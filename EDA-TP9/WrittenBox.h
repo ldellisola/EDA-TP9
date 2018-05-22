@@ -6,17 +6,6 @@
 #include <allegro5\allegro_primitives.h>
 using namespace std;
 
-//
-//typedef struct textData
-//{
-//	float x, y, width, height;
-//	int fontSize;
-//	string text;
-//	const char * path;
-//	const char * color;
-//};
-
-
 class WrittenBox
 {
 public:
@@ -33,5 +22,14 @@ protected:
 	float width;
 	float height;
 	ALLEGRO_FONT * font;
-
 };
+
+//
+//typedef struct textData
+//{
+//	float x, y, width, height;
+//	int fontSize;
+//	string text;
+//	const char * path;
+//	const char * color;
+//};

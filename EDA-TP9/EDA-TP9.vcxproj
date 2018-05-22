@@ -157,7 +157,6 @@
     <ClInclude Include="CursesClass.h" />
     <ClInclude Include="Display.h" />
     <ClInclude Include="hitachilcd.h" />
-    <ClInclude Include="masksAnd Stuff.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="UserHandler.h" />
     <ClInclude Include="WrittenBox.h" />

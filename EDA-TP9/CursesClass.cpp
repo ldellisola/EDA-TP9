@@ -38,7 +38,6 @@ char CursesClass::getSingleLoweredCharInRange(char min, char max, int posY, int 
 					mvdeleteln(3, 0);
 					err = false;
 				}
-
 			}
 			else
 			{
@@ -50,12 +49,10 @@ char CursesClass::getSingleLoweredCharInRange(char min, char max, int posY, int 
 					err = true;
 					color_set(1, NULL);
 				}
-
 			}
 		}
 
 	} while (!leave);
-
 	return retValue;
 }
 
@@ -63,10 +60,8 @@ int CursesClass::getNumberString(int posY, int posX, const char * errorMessage) 
 	bool leave = false;
 	bool isNum = true;
 	bool numEnded = false;
-
 	char str[4] = { 0,0,0,0 };
-
-
+	
 	do {
 		isNum = true;
 		move(posY, posX);
@@ -88,13 +83,10 @@ int CursesClass::getNumberString(int posY, int posX, const char * errorMessage) 
 					numEnded = true;
 					leave = true;
 				}
-
-
 			}
 		}
 
 	} while (!leave);
-
 	mvdeleteln(posY - 1, 0);
 	mvdeleteln(posY, 0);
 
@@ -108,7 +100,6 @@ string CursesClass::getString(int posY, int posX, int maxSize)
 	bool numEnded = false;
 	echo();
 	char * str = new char[maxSize +1];
-
 
 	do {
 		isNum = true;

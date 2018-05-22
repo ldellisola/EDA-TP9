@@ -2,7 +2,6 @@
 #define endFirstLine 16
 #define endSecondLine 32
 
-
 allegrolcd::allegrolcd(double W, double H)
 {
 	this->error = false;
@@ -177,8 +176,8 @@ bool allegrolcd::lcdSetCursorPosition(const cursorPosition pos) {
 	}
 	//lcdUpdateCursor();
 	return true;
-
 }
+
 cursorPosition allegrolcd::lcdGetCursorPosition() {
 	cursorPosition currpos;
 	currpos.column = cadd;

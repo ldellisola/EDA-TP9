@@ -1,7 +1,6 @@
 #include "hitachilcd.h"
 #include "Display.h"
 #include "ftd2xx.h"
-#include "masksAnd Stuff.h"
 #include <string>
 #include <iostream>
 using namespace std;
@@ -32,13 +31,13 @@ hitachilcd::hitachilcd(char * myDevice)
 {
 	Init = false;
 	error = true;
-	initDisplay(myDevice,this->device_handler);//De esto tampoco estoy muy seguro
-	if (this->device_handler != nullptr)
+	initDisplay(myDevice,this->device_handler);		//El arreglo de char es el string que identifica al lcd que estamos utilizando
+	if (this->device_handler != nullptr)	//Si el puntero device_handler no es NULL se realizó correctamente la inicializacion
 	{
 		this->Init = true;
 		error = false;
 	}
-	cadd = 1;
+	cadd = 1;		//cursor posicion
 }
 
 bool hitachilcd::lcdInitOk() {
@@ -58,7 +57,7 @@ bool hitachilcd::lcdGetError() {
 bool hitachilcd::lcdClear() {
 	bool result = false;
 	FT_STATUS state = FT_OK;
-	lcd_SendData(lcdInstructions::clearScreen, true, this->device_handler); //da fuck is rs
+	lcd_SendData(FUNCIONCLEAR, RS_INSTRUCTION, this->device_handler); 
 	if (state == FT_OK)
 	{
 		cadd = 1;
@@ -78,16 +77,15 @@ bool hitachilcd::lcdClearToEOL() {
 	if (!error)
 	{
 		while (this->cadd++ <= limit)
-			lcd_SendData(' ', false, this->device_handler); //No clue what rs is
-			//lcdWriteNyble(this->device_handler, ' ');//Escribo espacios
+			lcd_SendData(' ', RS_DATA, this->device_handler); 
 		cadd = cadd_2;
 		lcdUpdateCursor();
 	}
-	return error;//True si hubo error
+	return error;				//True si hubo error
 }
 
 basicLCD& hitachilcd::operator<<(const char  c) {
-	lcd_SendData(c, false, this->device_handler);//still no clue
+	lcd_SendData(c, RS_DATA, this->device_handler);//still no clue
 
 	if (++cadd == (END_OF_SECOND_LINE + 1))
 	{
@@ -101,7 +99,7 @@ basicLCD& hitachilcd::operator<<(const char * c) {
 	unsigned long int iterator = 0;
 	while (c[iterator])
 	{
-		lcd_SendData(c[iterator++], false, this->device_handler);
+		lcd_SendData(c[iterator++], RS_DATA, this->device_handler);
 		if (++cadd == END_OF_SECOND_LINE + 1)
 			this->cadd = BEGIN_OF_FIRST_LINE;
 
@@ -114,7 +112,7 @@ basicLCD& hitachilcd::operator<<(string str) {
 
 	for (unsigned int iterator = 0; iterator < (str.size()); iterator++)
 	{
-		lcd_SendData(str[iterator], false, this->device_handler);//sigo sin tener idea que es el rs
+		lcd_SendData(str[iterator], RS_DATA, this->device_handler);//sigo sin tener idea que es el rs
 		if (++cadd == END_OF_SECOND_LINE + 1)
 			this->cadd = BEGIN_OF_FIRST_LINE;
 		lcdUpdateCursor();
@@ -186,7 +184,7 @@ bool hitachilcd::lcdMoveCursorLeft() {
 			newPos.column = cadd - 1;
 		}
 		else if (this->cadd == BEGIN_OF_SECOND_LINE){
-			//me fui pa atras
+			//Voy hacia atras
 			newPos.row = 1;
 			newPos.column = END_OF_FIRST_LINE;
 		}
@@ -235,7 +233,7 @@ hitachilcd::~hitachilcd()
 
 void hitachilcd::lcdUpdateCursor()
 {
-	lcd_SendData(LCD_SET_DDRAM_ADRESS | Hcadd(), true, this->device_handler);//No tengo idea que es rs
+	lcd_SendData(LCD_SET_DDRAM_ADRESS | Hcadd(), RS_INSTRUCTION, this->device_handler);
 }
 
 unsigned char hitachilcd::Hcadd()

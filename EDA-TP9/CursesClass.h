@@ -14,6 +14,5 @@ public:
 private:
 	WINDOW * display = NULL;
 	const bool nodelaySet = true;
-
 };
 
