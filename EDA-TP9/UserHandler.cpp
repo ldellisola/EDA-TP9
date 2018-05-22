@@ -1,7 +1,5 @@
 #include "UserHandler.h"
 
-
-
 void stringMode(CursesClass & curses, basicLCD& display)
 {
 	clear();

@@ -1,4 +1,5 @@
 #pragma once
+#define FTD2XX_EXPORTS
 #include "ftd2xx.h"
 #include "BasicLcd.h"
 #include <string>

@@ -1,11 +1,11 @@
 #pragma once
 #include "masksAnd Stuff.h"
 #define FTD2XX_EXPORTS
-#include "librerias/ftd2xx.h"
+#include "ftd2xx.h"
 #include "Timer.h"
 
-#define LCD_E_ON 0b00000001
-#define LCD_E_OFF 0b00000000
+#define LCD_ENABLE_ON 0b00000001
+#define LCD_ENABLE_OFF 0b11111110
 
 #define ENABLE 0x01
 typedef unsigned long DWORD;

@@ -59,7 +59,6 @@ bool hitachilcd::lcdClear() {
 	bool result = false;
 	FT_STATUS state = FT_OK;
 	lcd_SendData(lcdInstructions::clearScreen, true, this->device_handler); //da fuck is rs
-	//lcdWriteNyble(this->device_handler, lcdInstructions::clearScreen); //No se como usarlo
 	if (state == FT_OK)
 	{
 		cadd = 1;
@@ -86,9 +85,10 @@ bool hitachilcd::lcdClearToEOL() {
 	}
 	return error;//True si hubo error
 }
+
 basicLCD& hitachilcd::operator<<(const char  c) {
 	lcd_SendData(c, false, this->device_handler);//still no clue
-	//lcdWriteNyble(this->device_handler, c);
+
 	if (++cadd == (END_OF_SECOND_LINE + 1))
 	{
 		cadd = BEGIN_OF_FIRST_LINE;
@@ -96,35 +96,34 @@ basicLCD& hitachilcd::operator<<(const char  c) {
 	lcdUpdateCursor();
 	return *this;
 }
+
 basicLCD& hitachilcd::operator<<(const char * c) {
 	unsigned long int iterator = 0;
 	while (c[iterator])
 	{
 		lcd_SendData(c[iterator++], false, this->device_handler);
-		//lcdWriteNyble(this->device_handler, c[iterator++]);
 		if (++cadd == END_OF_SECOND_LINE + 1)
 			this->cadd = BEGIN_OF_FIRST_LINE;
-		//lcdMoveCursorRight();
-		lcdUpdateCursor();
 
+		lcdUpdateCursor();
 	}
 	return *this;
 }
+
 basicLCD& hitachilcd::operator<<(string str) {
 
 	for (unsigned int iterator = 0; iterator < (str.size()); iterator++)
 	{
 		lcd_SendData(str[iterator], false, this->device_handler);//sigo sin tener idea que es el rs
-		//lcdWriteNyble(this->device_handler, str[iterator]);
 		if (++cadd == END_OF_SECOND_LINE + 1)
 			this->cadd = BEGIN_OF_FIRST_LINE;
-		//lcdMoveCursorRight();
 		lcdUpdateCursor();
 	}
 	return *this;
 }
+
 bool hitachilcd::lcdMoveCursorUp() {
-	if (firstLineRange) { return true; }//Ya estoy en la primer linea
+	if (firstLineRange) { return true; }		//Ya estoy en la primer linea
 	else if (secondLineRange) {
 		cursorPosition newPos;
 		newPos.column = this->cadd - CANT_COL;
@@ -134,6 +133,7 @@ bool hitachilcd::lcdMoveCursorUp() {
 	}
 	else return false; //Me fui del display
 }
+
 bool hitachilcd::lcdMoveCursorDown() {
 	if (firstLineRange) {
 		cursorPosition newPos;
@@ -145,6 +145,7 @@ bool hitachilcd::lcdMoveCursorDown() {
 	else
 		return true; //no se puede mover hacia abajo
 }
+
 bool hitachilcd::lcdMoveCursorRight() {
 	if (totalRange && (this->cadd != END_OF_SECOND_LINE))//Siempre que no haya llegado al final
 	{
@@ -169,6 +170,7 @@ bool hitachilcd::lcdMoveCursorRight() {
 	}
 	else return true;//Me pasé de el display
 }
+
 bool hitachilcd::lcdMoveCursorLeft() {
 	if (totalRange && (this->cadd != 1))
 	{
@@ -193,6 +195,7 @@ bool hitachilcd::lcdMoveCursorLeft() {
 	}
 	else return true;//Estoy en el principio
 }
+
 bool hitachilcd::lcdSetCursorPosition(const cursorPosition pos) {
 	switch (pos.row){
 	case 1:cadd = pos.column; break;
@@ -201,6 +204,7 @@ bool hitachilcd::lcdSetCursorPosition(const cursorPosition pos) {
 	lcdUpdateCursor();
 	return true;
 }
+
 cursorPosition hitachilcd::lcdGetCursorPosition() {
 	cursorPosition currPos;
 	if (firstLineRange)
@@ -231,7 +235,6 @@ hitachilcd::~hitachilcd()
 
 void hitachilcd::lcdUpdateCursor()
 {
-	//lcdWriteNyble(this->device_handler, LCD_SET_DDRAM_ADRESS | Hcadd());
 	lcd_SendData(LCD_SET_DDRAM_ADRESS | Hcadd(), true, this->device_handler);//No tengo idea que es rs
 }
 

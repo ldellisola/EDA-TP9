@@ -75,10 +75,7 @@ int main() {
 			if (isalnum(ch)) {		// Lo escribe en pantalla
 				*lcd << ch;
 			}
-
 		}
-
-
 	} while (!leave);
 
 
